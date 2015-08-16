@@ -3,8 +3,8 @@
 
 fulltext1:
   image: supermy/elasticsearch:latest
-#  links:
-#      - config
+  links:
+      - config
   ports:
     - "9200:9200"
     - "9300"
@@ -13,8 +13,18 @@ fulltext1:
 
 fulltext2:
   image: supermy/elasticsearch:latest
-#  links:
-#      - config
+  links:
+      - config
+  ports:
+    - "9200"
+    - "9300"
+  environment:
+    es.node.name: testnode2
+
+fulltext3:
+  image: supermy/elasticsearch:latest
+  links:
+      - config
   ports:
     - "9200"
     - "9300"

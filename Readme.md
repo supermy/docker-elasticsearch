@@ -114,3 +114,95 @@ ElasticSearch的一些概念:
  
 副本(replicas)
 每一个分片可以有0到多个副本，每个副本都是分片的完整拷贝，可以用来增加速度，同时也可以提高系统的容错性，一旦某个节点数据损坏，其他节点可以代替他.
+
+
+
+
+新建索引名为test的索引 "curl -XPUT http://192.168.59.103:9200/test"
+
+给索引创建mapping
+
+curl -XPOST http://192.168.59.103:9200/test/test/_mapping -d'
+{
+    "test": {
+        "properties": {
+            "content": {
+                "type" : "string",
+                "boost" : 8.0,
+                "term_vector" : "with_positions_offsets",
+                "analyzer" : "ik",
+                "include_in_all" : true
+            }
+        }
+    }
+}'
+测试命令
+curl 'http://192.168.59.103:9200/test/_analyze?analyzer=ik&pretty=true' -d '
+{
+"text":"这是我的第一个elasticsearch集群"
+}'
+测试结果
+
+{
+  "tokens" : [ {
+    "token" : "text",
+    "start_offset" : 4,
+    "end_offset" : 8,
+    "type" : "ENGLISH",
+    "position" : 1
+  }, {
+    "token" : "这是",
+    "start_offset" : 11,
+    "end_offset" : 13,
+    "type" : "CN_WORD",
+    "position" : 2
+  }, {
+    "token" : "我",
+    "start_offset" : 13,
+    "end_offset" : 14,
+    "type" : "CN_CHAR",
+    "position" : 3
+  }, {
+    "token" : "第一个",
+    "start_offset" : 15,
+    "end_offset" : 18,
+    "type" : "CN_WORD",
+    "position" : 4
+  }, {
+    "token" : "第一",
+    "start_offset" : 15,
+    "end_offset" : 17,
+    "type" : "CN_WORD",
+    "position" : 5
+  }, {
+    "token" : "一个",
+    "start_offset" : 16,
+    "end_offset" : 18,
+    "type" : "CN_WORD",
+    "position" : 6
+  }, {
+    "token" : "一",
+    "start_offset" : 16,
+    "end_offset" : 17,
+    "type" : "TYPE_CNUM",
+    "position" : 7
+  }, {
+    "token" : "个",
+    "start_offset" : 17,
+    "end_offset" : 18,
+    "type" : "COUNT",
+    "position" : 8
+  }, {
+    "token" : "elasticsearch",
+    "start_offset" : 18,
+    "end_offset" : 31,
+    "type" : "ENGLISH",
+    "position" : 9
+  }, {
+    "token" : "集群",
+    "start_offset" : 31,
+    "end_offset" : 33,
+    "type" : "CN_WORD",
+    "position" : 10
+  } ]
+}
